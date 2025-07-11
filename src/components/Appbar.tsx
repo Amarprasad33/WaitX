@@ -24,7 +24,7 @@ export function Appbar() {
                         </div>
                     </div>
 
-                    <div className="flex gap-284px]">
+                    <div className="flex gap-28px]">
                         <div className="cursor-pointer hover:text-zinc-700 transition-colors duration-200">Home</div>
                         <div className="cursor-pointer hover:text-zinc-700 transition-colors duration-200">Pricing</div>
                         <div className="cursor-pointer hover:text-zinc-700 transition-colors duration-200">Product</div>
