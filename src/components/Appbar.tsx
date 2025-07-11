@@ -7,7 +7,7 @@ export function Appbar() {
     const router  = useRouter();
     return (
         <nav className="flex px-9 py-0 fixed top-4 w-full z-20">
-            <div className="nav-bar relative flex items-center bg-white w-full rounded-xl p-[5px] text-black shadow-[0px_5px_22px_4px_rgba(171,_217,_220,_0.25)] h-[65px]" >
+            <div className="nav-bar relative flex items-center bg-white w-full rounded-xl p-[5px] text-black shadow-[0px_5px_22px_4px_rgba(171,_217,_220,_0.25)] h-[65px] max-w-[1300px] mx-auto" >
                 <div className="w-full h-full rounded-[7px] flex shadow-[inset_0px_3px_17px_-2px_rgba(180,_231,_234,_0.40)]"  style={{ background: 'linear-gradient(to bottom, #C0ECE9 0%, #d5dada40 100%)', opacity: 0.4667}}>
                 </div>
                 <div className="absolute left-0 rounded-[12px] p-[5px] w-full h-full flex items-center justify-between">
@@ -18,10 +18,13 @@ export function Appbar() {
                             width={18}
                             height={29}
                         />
-                        <div className="app-name text-xl font-semibold">WaitX</div>
+                        <div className="flex gap-1">
+                            <div className="app-name text-lg font-semibold">ChargeMap</div>
+                            <div className="px-2 py-1 bg-black text-white rounded-[6px] font-semibold">AI</div>
+                        </div>
                     </div>
 
-                    <div className="flex gap-[34px]">
+                    <div className="flex gap-284px]">
                         <div className="cursor-pointer hover:text-zinc-700 transition-colors duration-200">Home</div>
                         <div className="cursor-pointer hover:text-zinc-700 transition-colors duration-200">Pricing</div>
                         <div className="cursor-pointer hover:text-zinc-700 transition-colors duration-200">Product</div>

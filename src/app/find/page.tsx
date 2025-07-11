@@ -2,9 +2,11 @@
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
+import axios from 'axios';
+
 
 // const Map = dynamic(() => import('@/components/Map'), { ssr: false });
-const MapWithStattions = dynamic(() => import('@/components/MapWithStations'), { ssr: false });
+const MapWithStations = dynamic(() => import('@/components/MapWithStations'), { ssr: false });
 
 
 export default function Find() {
@@ -13,13 +15,30 @@ export default function Find() {
 
     useEffect(() => {
         console.log("result-->", data);
+        // axios
+        //     .get('http://ec2-35-154-166-146.ap-south-1.compute.amazonaws.com:8000/getStationData', {
+        //         params: { count: 3 }
+        //     })
+        //     .then((response) => {
+        //         console.log("response", response);
+        //         if(response?.data)
+        //             setData(response.data);
+        //     })
+        //     .catch((err) => {
+        //         console.error(err);
+        //         // setError('Failed to fetch station data');
+        //     });
         setData(stationsObj);
     }, [data])
+
+    if(!data){
+        return <div>Loadinggggg</div>
+    }
     return (
         <div className='w-full min-h-[150vh] bg-white flex flex-col items-center'>
             <div className="map-container w-[80%] h-[40rem] rounded-lg mt-32">
 
-                <MapWithStattions stations={data?.stationCounts} />
+                <MapWithStations stations={data?.stationCounts} />
             </div>
         </div>
     );
@@ -31,8 +50,8 @@ const stationsObj = {
     "stationCounts": [
       {
         "station_id": 101,
-        "location_lat": 28.680655,
-        "location_lon": 77.145563,
+        "location_lat": 20.35411540651478,
+        "location_lon": 85.82661814241807,
         "charger_type": "Level_2",
         "number_of_ports": 6,
         "port_capacity_kw": 22,
@@ -65,8 +84,8 @@ const stationsObj = {
       },
       {
         "station_id": 103,
-        "location_lat": 28.632688,
-        "location_lon": 77.183117,
+        "location_lat": 20.313961440910397,
+        "location_lon": 85.82774668202393,
         "charger_type": "DC_Fast",
         "number_of_ports": 6,
         "port_capacity_kw": 22,
@@ -99,8 +118,8 @@ const stationsObj = {
       },
       {
         "station_id": 102,
-        "location_lat": 28.651843,
-        "location_lon": 77.22915,
+        "location_lat": 20.300575521219614,
+        "location_lon": 85.82352453037566,
         "charger_type": "Level_1",
         "number_of_ports": 6,
         "port_capacity_kw": 22,
