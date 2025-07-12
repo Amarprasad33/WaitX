@@ -41,14 +41,14 @@ export default function SigninForm() {
   async function onSubmit(data: SigninSchemaType) {
     try {
         console.log("submit-data", data);
-    //   const response = await axios.post('/api/auth/signup', data);
-
-    //   if (response.status === 200) {
-    //     toast("Signup successful. Welcome!")
-    //     router.push('/');
-    //   } else {
-    //     throw new Error('Signup failed');
-    //   }
+      const response = await axios.post('http://ec2-35-154-166-146.ap-south-1.compute.amazonaws.com:8000/loginUser', data);
+      console.log("login--res", response);
+      if (response.status === 200) {
+        toast("Signup successful. Welcome!")
+        router.push('/');
+      } else {
+        throw new Error('Signup failed');
+      }
     } catch (error: any) {
       toast("Signin failed", {
         description: error?.response?.data?.message || 'Something went wrong!',

@@ -92,7 +92,7 @@ export default function SignupForm() {
   async function onSubmit(data: SignupSchemaType) {
     try {
         console.log("submit-data", data);
-      const response = await axios.post('/api/auth/signup', data);
+      const response = await axios.post('http://ec2-35-154-166-146.ap-south-1.compute.amazonaws.com:8000/registerUser', data);
 
       if (response.status === 200) {
         toast("Signup successful. Welcome!")

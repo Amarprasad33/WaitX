@@ -5,10 +5,50 @@ import { useEffect, useState } from 'react';
 // Using the MapDirections component as specified in your original code.
 const MapDirections = dynamic(() => import('@/components/MapDirections'), { ssr: false });
 
+// TypeScript interfaces for the station data
+interface Station {
+  station_id: number;
+  location_lat: number;
+  location_lon: number;
+  charger_type: "Level_1" | "Level_2" | "DC_Fast";
+  number_of_ports: number;
+  port_capacity_kw: number;
+  availability_hours: string;
+  operator_type: "franchise" | "private" | "government";
+  requested_time: string;
+  day_of_week: string;
+  is_weekend: number;
+  hour_of_day: number;
+  is_holiday: number;
+  current_location_lat: number;
+  current_location_lon: number;
+  estimated_arrival_time: string;
+  trip_distance_km: number;
+  trip_duration_min: number;
+  battery_level_percent: number;
+  charging_needed_kw: number;
+  average_occupancy_rate_at_time: number;
+  avg_duration_per_charge_session: number;
+  sessions_last_7_days_at_time: number;
+  avg_wait_time_at_hour: number;
+  peak_hours: number;
+  last_known_status: "free" | "occupied";
+  weather_conditions: string;
+  temperature_celsius: number;
+  traffic_congestion_level: "Low" | "Medium" | "High";
+  local_events_density: "Low" | "Medium" | "High";
+  air_quality_index: number;
+  is_available_at_arrival_time: number;
+}
+
+interface StationData {
+  stationCounts: Station[];
+}
+
 export default function Find() {
 
     // State for the station data
-    const [stationData, setStationData] = useState<any>(null);
+    const [stationData, setStationData] = useState<StationData | null>(null);
     // State for the user's location, initialized to null
     const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
 
@@ -69,17 +109,17 @@ export default function Find() {
 
 
 // The static station data object
-const stationsObj = {
+const stationsObj: StationData = {
     "stationCounts": [
       {
         "station_id": 101,
         "location_lat": 20.35411540651478,
         "location_lon": 85.82661814241807,
-        "charger_type": "Level_2",
+        "charger_type": "Level_2" as const,
         "number_of_ports": 6,
         "port_capacity_kw": 22,
         "availability_hours": "8:00-22:00",
-        "operator_type": "franchise",
+        "operator_type": "franchise" as const,
         "requested_time": "2025-08-14 05:00:00",
         "day_of_week": "Thursday",
         "is_weekend": 0,
@@ -97,11 +137,11 @@ const stationsObj = {
         "sessions_last_7_days_at_time": 68,
         "avg_wait_time_at_hour": 15,
         "peak_hours": 0,
-        "last_known_status": "free",
+        "last_known_status": "free" as const,
         "weather_conditions": "Clear",
         "temperature_celsius": 36,
-        "traffic_congestion_level": "Low",
-        "local_events_density": "High",
+        "traffic_congestion_level": "Low" as const,
+        "local_events_density": "High" as const,
         "air_quality_index": 230,
         "is_available_at_arrival_time": 1
       },

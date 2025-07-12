@@ -3,14 +3,13 @@
 import dynamic from 'next/dynamic';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-
-// const Map = dynamic(() => import('@/components/Map'), { ssr: false });
-const MapWithStattions = dynamic(() => import('@/components/MapWithStations'), { ssr: false });
+import { useRouter } from 'next/navigation';
 
 export default function Home() {
   
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState<any>(null);
+  const router  = useRouter();
   useEffect(() => {
     console.log("result-->", data);
     // setData(stationsObj);
@@ -45,12 +44,14 @@ export default function Home() {
     fetchData();
   }, []);
 
-  
+  if(loading){
+    return <div>Loading</div>
+  }
 
   return (
     <div className="w-full min-h-screen bg-white flex flex-col items-center">
       <div className="text-black font-semibold mt-46 w-[50%] text-5xl text-center -tracking-[1px]">Find your next charging spot in minutes</div>
-        
+      <button className="px-10 py-3 mt-8 bg-black text-white rounded-[8px] text-sm hover:bg-zinc-700  transition-colors duration-200 cursor-pointer" onClick={() => router.push('/direct')}>Find your next charge</button>
     </div>
   );
 }
