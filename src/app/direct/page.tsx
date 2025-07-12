@@ -1,6 +1,9 @@
 "use client"
+import axios from 'axios';
 import dynamic from 'next/dynamic';
+import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { toast } from 'sonner';
 
 // Using the MapDirections component as specified in your original code.
 const MapDirections = dynamic(() => import('@/components/MapDirections'), { ssr: false });
@@ -46,15 +49,43 @@ interface StationData {
 }
 
 export default function Find() {
+    const router  = useRouter();
 
     // State for the station data
     const [stationData, setStationData] = useState<StationData | null>(null);
     // State for the user's location, initialized to null
     const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
+    const [pathData, setPathData] = useState(null);
 
     useEffect(() => {
-        // Set the station data from the constant object
-        setStationData(stationsObj);
+      // Set the station data from the constant object
+      setStationData(stationsObj);
+
+      async function fetchOptimizedStations() {
+        const response = await axios.post('http://ec2-35-154-166-146.ap-south-1.compute.amazonaws.com:8000/predict', stationMapData);
+        console.log("Optimal-path-res", response);
+        if (response.status === 200) {
+          console.log("stations-opti", response);
+          let data = response.data.data;
+          let optimal = data.filter((item: any) => item.optimal);
+          console.log("optimal-station", optimal);
+          let pathData = {
+            ...optimal[0],
+            station_id: "201",
+            last_known_status: "free",
+            charger_type: "Level_2",
+            port_capacity_kw: "22 kW",
+            availability_hours: "8:00-22:00",
+            operator_type: "franchise"
+          };
+          console.log("pathData", pathData);
+
+        } else {
+          throw new Error('Signup failed');
+        }
+      }
+
+      fetchOptimizedStations();
 
         // Check if the browser supports Geolocation
         // if (navigator.geolocation) {
@@ -215,3 +246,41 @@ const stationsObj: StationData = {
       }
     ]
   }
+
+const stationMapData = {
+  "stationData": [
+    {
+      "station_id": "102",
+      "station_lat": 20.342192512441223,
+      "station_long": 85.81946307515841,
+      "is_occupied": true,
+      "user_lat": 20.34207322274899,
+      "user_long": 85.80466392877207,
+      "eta": 512,
+      "trip_distance": 1000,
+      "battery_level_percent":30
+    },
+    {
+      "station_id": "103",
+      "station_lat": 20.33921480880688,
+      "station_long": 85.80161029230838,
+      "is_occupied": true,
+      "user_lat": 20.34207322274899,
+      "user_long": 85.80466392877207,
+      "eta": 912,
+      "trip_distance": 1600,
+      "battery_level_percent":30
+    },
+    {
+      "station_id": "104",
+      "station_lat": 20.342192512441223,
+      "station_long": 85.81946307515841,
+      "is_occupied": true,
+      "user_lat": 20.34207322274899,
+      "user_long": 85.80466392877207,
+      "eta": 1212,
+      "trip_distance": 800,
+      "battery_level_percent":30
+    }
+  ]
+}
