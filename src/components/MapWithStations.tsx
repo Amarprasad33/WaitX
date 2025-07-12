@@ -29,7 +29,7 @@ interface Station {
 //     stationCounts: Station[];
 // }
 
-export default function Map({stations}: {stations: any}) {
+export default function Map({stations}: {stations: Station[]}) {
     useEffect(() => {
         console.log("stations", stations);
         if (stations.length > 0) {
@@ -49,7 +49,7 @@ export default function Map({stations}: {stations: any}) {
 
   const [center, setCenter] = useState(defaultCenter);
   const [selectedStation, setSelectedStation] = useState<Station | null>(null);
-  const [markerPos, setMarkerPos] = useState(defaultCenter);
+  // const [markerPos, setMarkerPos] = useState(defaultCenter);
   const autoCompleteRef = useRef<google.maps.places.Autocomplete | null>(null);
 
 //   const onPlaceChanged = () => {
@@ -101,7 +101,7 @@ export default function Map({stations}: {stations: any}) {
         center={center} 
         zoom={12}
       >
-        {stations.map((station: any) => (
+        {stations.map((station: Station) => (
           <Marker
             key={station.station_id}
             position={{ lat: station.location_lat, lng: station.location_lon }}

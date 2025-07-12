@@ -1,9 +1,9 @@
 "use client"
 import axios from 'axios';
 import dynamic from 'next/dynamic';
-import { useRouter } from 'next/navigation';
+// import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { toast } from 'sonner';
+// import { toast } from 'sonner';
 
 // Using the MapDirections component as specified in your original code.
 const MapDirections = dynamic(() => import('@/components/MapDirections'), { ssr: false });
@@ -44,12 +44,27 @@ interface Station {
   is_available_at_arrival_time: number;
 }
 
+type StationPrediction = {
+  battery_capacity_kwh: number;
+  battery_level_percent: number;
+  eta: number;
+  is_occupied: boolean;
+  optimal: boolean;
+  probability: number;
+  station_id: string;
+  station_lat: number;
+  station_long: number;
+  trip_distance: number;
+  user_lat: number;
+  user_long: number;
+};
+
 interface StationData {
   stationCounts: Station[];
 }
 
 export default function Find() {
-    const router  = useRouter();
+    // const router  = useRouter();
 
     // State for the station data
     const [stationData, setStationData] = useState<StationData | null>(null);
@@ -94,10 +109,10 @@ export default function Find() {
       console.log("Optimal-path-res", response);
       if (response.status === 200) {
         console.log("stations-opti", response);
-        let data = response.data.data;
-        let optimal = data.filter((item: any) => item.optimal);
+        const data = response.data.data;
+        const optimal = data.filter((item: StationPrediction) => item.optimal);
         console.log("optimal-station", optimal);
-        let pathData = {
+        const pathData = {
           stationCounts: [
             {
             ...optimal[0],

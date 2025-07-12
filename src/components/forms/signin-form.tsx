@@ -3,23 +3,23 @@
 
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { signinFormSchema, SigninSchemaType } from '@/lib/schema/authSchema';
 import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage, FormDescription } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { EyeIcon, EyeOffIcon } from 'lucide-react';
 import { toast } from 'sonner';
-import axios from 'axios';  
+import axios from 'axios';
 import { useRouter } from 'next/navigation';
-import { MultiSelect } from '../ui/multi-select';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
+// import { MultiSelect } from '../ui/multi-select';
+// import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 
-type EV = {
-    brand: string;
-    model: string;
-    battery_capacity_kWh: number;
-}
+// type EV = {
+//     brand: string;
+//     model: string;
+//     battery_capacity_kWh: number;
+// }
 
 export default function SigninForm() {
   const [passwordVisible, setPasswordVisible] = useState(false);
@@ -49,14 +49,24 @@ export default function SigninForm() {
       } else {
         throw new Error('Signup failed');
       }
-    } catch (error: any) {
-      toast("Signin failed", {
-        description: error?.response?.data?.message || 'Something went wrong!',
-        action: {
+    } catch (error: unknown) {
+      if(axios.isAxiosError(error)){
+        toast("Signin failed", {
+          description: error?.response?.data?.message || 'Something went wrong!',
+          action: {
+              label: "OK!",
+              onClick: () => console.log("Undo"),
+          },
+        })
+      }else{
+        toast("Signin failed", {
+          description: 'Something went wrong!',
+          action: {
             label: "OK!",
             onClick: () => console.log("Undo"),
-        },
-      })
+          },
+        });
+      }
 
     }
   }
@@ -74,7 +84,7 @@ export default function SigninForm() {
               <FormControl>
                 <Input placeholder="you@example.com" type="email" {...field} />
               </FormControl>
-              <FormDescription>We'll never share your email.</FormDescription>
+              <FormDescription>We&apos;ll never share your email.</FormDescription>
               <FormMessage />
             </FormItem>
           )}

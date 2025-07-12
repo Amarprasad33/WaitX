@@ -12,7 +12,7 @@ import { EyeIcon, EyeOffIcon } from 'lucide-react';
 import { toast } from 'sonner';
 import axios from 'axios';  
 import { useRouter } from 'next/navigation';
-import { MultiSelect } from '../ui/multi-select';
+// import { MultiSelect } from '../ui/multi-select';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 
 type EV = {
@@ -50,7 +50,7 @@ export default function SignupForm() {
         const uniqueBrands = Array.from(new Set(evData.map(ev => ev.brand)));
 
         // Extract all models
-        const models: string[] = evData.map(ev => ev.model);
+        // const models: string[] = evData.map(ev => ev.model);
 
         const modelsByBrand: { [brand: string]: string[] } = evData.reduce((acc, ev) => {
             if (!acc[ev.brand]) {
@@ -80,7 +80,7 @@ export default function SignupForm() {
     } else {
       setModels([]);
     }
-  }, [form.watch("vehicleBrand"), modelsByBrand]);
+  }, [form, form.watch("vehicleBrand"), modelsByBrand]);
 
   useEffect(() => {
     console.log("models_by-brnad", modelsByBrand)
@@ -100,14 +100,24 @@ export default function SignupForm() {
       } else {
         throw new Error('Signup failed');
       }
-    } catch (error: any) {
-      toast("Signup failed", {
-        description: error?.response?.data?.message || 'Something went wrong!',
-        action: {
+    } catch (error: unknown) {
+      if(axios.isAxiosError(error)){
+        toast("Signin failed", {
+          description: error?.response?.data?.message || 'Something went wrong!',
+          action: {
+              label: "OK!",
+              onClick: () => console.log("Undo"),
+          },
+        })
+      }else{
+        toast("Signin failed", {
+          description: 'Something went wrong!',
+          action: {
             label: "OK!",
             onClick: () => console.log("Undo"),
-        },
-      })
+          },
+        });
+      }
 
     }
   }
@@ -139,7 +149,7 @@ export default function SignupForm() {
               <FormControl>
                 <Input placeholder="you@example.com" type="email" {...field} />
               </FormControl>
-              <FormDescription>We'll never share your email.</FormDescription>
+              <FormDescription>We&apos;ll never share your email.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -186,8 +196,8 @@ export default function SignupForm() {
                       <SelectValue placeholder="Select brand.." />
                     </SelectTrigger>
                     <SelectContent>
-                        {brands.map((brand: any) => (
-                            <SelectItem value={brand.value}>{brand.label}</SelectItem>
+                        {brands.map((brand: { value: string, label: string }) => (
+                            <SelectItem key={brand.value} value={brand.value}>{brand.label}</SelectItem>
                         ))}
                     </SelectContent>
                   </Select>
@@ -209,8 +219,8 @@ export default function SignupForm() {
                       <SelectValue placeholder="Select brand.." />
                     </SelectTrigger>
                     <SelectContent>
-                        {models.map((model: any) => (
-                            <SelectItem value={model.value} onChange={(selectedValues) => { field.onChange(selectedValues); }}>{model.label}</SelectItem>
+                        {models.map((model: { value: string, label: string }) => (
+                            <SelectItem key={model.value} value={model.value} onChange={(selectedValues) => { field.onChange(selectedValues); }}>{model.label}</SelectItem>
                         ))}
                     </SelectContent>
                   </Select>
