@@ -63,7 +63,7 @@ export default function SigninForm() {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 items-center w-[85%]">
 
         <FormField
           control={form.control}
@@ -111,6 +111,7 @@ export default function SigninForm() {
         <Button type="submit" className="w-full">
           Sign In
         </Button>
+
       </form>
     </Form>
   );
