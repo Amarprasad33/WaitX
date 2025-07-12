@@ -55,68 +55,73 @@ export default function Find() {
     const [stationData, setStationData] = useState<StationData | null>(null);
     // State for the user's location, initialized to null
     const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
-    const [pathData, setPathData] = useState(null);
+    const [pathData, setPathData] = useState<StationData | null>(null);
 
     useEffect(() => {
       // Set the station data from the constant object
       setStationData(stationsObj);
+      setPathData(stationsObj);
+      // Check if the browser supports Geolocation
+      // if (navigator.geolocation) {
+      //     // Get the user's current position
+      //     navigator.geolocation.getCurrentPosition(
+      //         (position) => {
+      //             // On success, update the userLocation state
+      //             setUserLocation({
+      //                 lat: position.coords.latitude,
+      //                 lng: position.coords.longitude,
+      //             });
+      //         },
+      //         (error) => {
+      //             // Handle any errors
+      //             console.error("Error getting user's location:", error);
+      //             // You could set an error state here to inform the user
+      //         }
+      //     );
+      // } else {
+      //     console.error("Geolocation is not supported by this browser.");
+      // }
+      setUserLocation({
+          lat:20.34207322274899,
+          lng: 85.80466392877207
+      })
 
-      async function fetchOptimizedStations() {
-        const response = await axios.post('http://ec2-35-154-166-146.ap-south-1.compute.amazonaws.com:8000/predict', stationMapData);
-        console.log("Optimal-path-res", response);
-        if (response.status === 200) {
-          console.log("stations-opti", response);
-          let data = response.data.data;
-          let optimal = data.filter((item: any) => item.optimal);
-          console.log("optimal-station", optimal);
-          let pathData = {
+    // The empty dependency array [] ensures this effect runs only once on component mount.
+    }, []);
+
+    async function fetchOptimizedStations() {
+      const response = await axios.post('http://ec2-35-154-166-146.ap-south-1.compute.amazonaws.com:8000/predict', stationMapData);
+      console.log("Optimal-path-res", response);
+      if (response.status === 200) {
+        console.log("stations-opti", response);
+        let data = response.data.data;
+        let optimal = data.filter((item: any) => item.optimal);
+        console.log("optimal-station", optimal);
+        let pathData = {
+          stationCounts: [
+            {
             ...optimal[0],
             station_id: "201",
             last_known_status: "free",
             charger_type: "Level_2",
             port_capacity_kw: "22 kW",
             availability_hours: "8:00-22:00",
-            operator_type: "franchise"
-          };
-          console.log("pathData", pathData);
+            operator_type: "franchise",
+            location_lat: optimal[0]['station_lat'],
+            location_lon: optimal[0]['station_long']
+          }
+          ]
+        };
+        setPathData(pathData);
+        console.log("pathData", pathData);
 
-        } else {
-          throw new Error('Signup failed');
-        }
+      } else {
+        throw new Error('Signup failed');
       }
-
-      fetchOptimizedStations();
-
-        // Check if the browser supports Geolocation
-        // if (navigator.geolocation) {
-        //     // Get the user's current position
-        //     navigator.geolocation.getCurrentPosition(
-        //         (position) => {
-        //             // On success, update the userLocation state
-        //             setUserLocation({
-        //                 lat: position.coords.latitude,
-        //                 lng: position.coords.longitude,
-        //             });
-        //         },
-        //         (error) => {
-        //             // Handle any errors
-        //             console.error("Error getting user's location:", error);
-        //             // You could set an error state here to inform the user
-        //         }
-        //     );
-        // } else {
-        //     console.error("Geolocation is not supported by this browser.");
-        // }
-        setUserLocation({
-            lat:20.34207322274899,
-            lng: 85.80466392877207
-        })
-
-    // The empty dependency array [] ensures this effect runs only once on component mount.
-    }, []);
+    }
 
     // Display a loading message until both the station data and user location are available
-    if (!stationData || !userLocation) {
+    if (!stationData || !userLocation || !pathData) {
         return <div>Loading map data and fetching user location...</div>;
     }
 
@@ -129,8 +134,9 @@ export default function Find() {
                   Your MapDirections component should be able to accept 'userLocation' 
                   and use it to display a marker.
                 */}
+                <button className='px-10 mb-2 py-3 mt-8 bg-black text-white rounded-[8px] text-sm hover:bg-zinc-700  transition-colors duration-200 cursor-pointer' onClick={fetchOptimizedStations}>Find NearCharge</button>
                 <MapDirections 
-                    stations={stationData?.stationCounts} 
+                    stations={pathData.stationCounts} 
                     userLocation={userLocation} 
                 />
             </div>
@@ -251,8 +257,8 @@ const stationMapData = {
   "stationData": [
     {
       "station_id": "102",
-      "station_lat": 20.342192512441223,
-      "station_long": 85.81946307515841,
+      "station_lat": 20.35411540651478,
+      "station_long": 85.82661814241807,
       "is_occupied": true,
       "user_lat": 20.34207322274899,
       "user_long": 85.80466392877207,
@@ -262,8 +268,8 @@ const stationMapData = {
     },
     {
       "station_id": "103",
-      "station_lat": 20.33921480880688,
-      "station_long": 85.80161029230838,
+      "station_lat": 20.313961440910397,
+      "station_long": 85.82774668202393,
       "is_occupied": true,
       "user_lat": 20.34207322274899,
       "user_long": 85.80466392877207,
@@ -273,8 +279,8 @@ const stationMapData = {
     },
     {
       "station_id": "104",
-      "station_lat": 20.342192512441223,
-      "station_long": 85.81946307515841,
+      "station_lat": 20.300575521219614,
+      "station_long": 85.82352453037566,
       "is_occupied": true,
       "user_lat": 20.34207322274899,
       "user_long": 85.80466392877207,

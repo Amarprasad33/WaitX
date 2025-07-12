@@ -232,7 +232,7 @@ export default function MapDirections({ stations, userLocation }: Props) {
                             <button 
                                 onClick={handleGetDirections}
                                 disabled={isLoadingDirections || !userLocation}
-                                className={`mt-2 px-4 py-2 text-white rounded ${
+                                className={`mt-2 px-4 py-2 text-white rounded w-full ${
                                     isLoadingDirections || !userLocation 
                                         ? 'bg-gray-400 cursor-not-allowed' 
                                         : 'bg-blue-500 hover:bg-blue-700'
@@ -240,6 +240,17 @@ export default function MapDirections({ stations, userLocation }: Props) {
                             >
                                 {isLoadingDirections ? 'Loading...' : 'Get Directions'}
                             </button>
+                            {userLocation && (
+                                <a
+                                    href={`https://www.google.com/maps/dir/?api=1&origin=${userLocation.lat},${userLocation.lng}&destination=${selectedStation.location_lat},${selectedStation.location_lon}&travelmode=driving`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="mt-2 px-4 py-2 text-white rounded bg-green-500 hover:bg-green-700 block text-center"
+                                    style={{ marginTop: '8px' }}
+                                >
+                                    Open in Google Maps
+                                </a>
+                            )}
                             {!userLocation && (
                                 <p className="text-sm text-red-600 mt-1">
                                     User location required for directions
