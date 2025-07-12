@@ -11,7 +11,7 @@ export function Appbar() {
                 <div className="w-full h-full rounded-[7px] flex shadow-[inset_0px_3px_17px_-2px_rgba(180,_231,_234,_0.40)]"  style={{ background: 'linear-gradient(to bottom, #C0ECE9 0%, #d5dada40 100%)', opacity: 0.4667}}>
                 </div>
                 <div className="absolute left-0 rounded-[12px] p-[5px] w-full h-full flex items-center justify-between">
-                    <div className="logo ml-12 flex gap-3 items-center cursor-pointer">
+                    <div className="logo ml-12 flex gap-3 items-center cursor-pointer" onClick={() => router.replace("/")}>
                         <Image 
                             src="/logo.svg"
                             alt="logo"
@@ -24,7 +24,7 @@ export function Appbar() {
                         </div>
                     </div>
 
-                    <div className="flex gap-28px]">
+                    <div className="flex gap-[28px]">
                         <div className="cursor-pointer hover:text-zinc-700 transition-colors duration-200">Home</div>
                         <div className="cursor-pointer hover:text-zinc-700 transition-colors duration-200">Pricing</div>
                         <div className="cursor-pointer hover:text-zinc-700 transition-colors duration-200">Product</div>
